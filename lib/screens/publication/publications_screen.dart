@@ -1,6 +1,6 @@
 import 'package:bookzilla_flutter/data/local/Publication/publication.dart';
 import 'package:bookzilla_flutter/data/local/Publication/publication_repository.dart';
-import 'package:bookzilla_flutter/shared/publication/publicationwrap.dart';
+import 'package:bookzilla_flutter/shared/publication/publicationgrid.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../shared/menu_drawer.dart';
@@ -33,7 +33,8 @@ class _PublicationScreenState extends State<PublicationScreen> {
                 );
               } else if (snapshot.hasData) {
                 List<LocalPublication> items = snapshot.data!;
-                return PublicationWrap(items: items);
+                // return PublicationWrap(items: items);
+                return PublicationGrid(items: items);
               } else {
                 // Cas où le Future est null
                 return const Center(

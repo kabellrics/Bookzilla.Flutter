@@ -1,6 +1,6 @@
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
-import 'package:bookzilla_flutter/shared/tome/tomewrap.dart';
+import 'package:bookzilla_flutter/shared/tome/tomegrid.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../../shared/menu_drawer.dart';
@@ -33,7 +33,8 @@ class _TomeScreenState extends State<TomeScreen> {
                 );
               } else if (snapshot.hasData) {
                 List<LocalTome> items = snapshot.data!;
-                return TomeWrap(items: items);
+                // return TomeWrap(items: items);
+                return TomeGrid(items: items);
               } else {
                 // Cas où le Future est null
                 return const Center(

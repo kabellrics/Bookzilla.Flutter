@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookzilla_flutter/data/local/Collection/collection.dart';
 import 'package:bookzilla_flutter/screens/collection/collection_detail_screen.dart';
 import 'package:flutter/material.dart';
 
-class CollectionGrid extends StatelessWidget {
+class ExplorerCollectionGrid extends StatelessWidget {
   final List<LocalCollection> items;
-  const CollectionGrid({required this.items});
+  const ExplorerCollectionGrid({required this.items});
 
   Widget getImage(LocalCollection item) {
     if (item.localfanartpath != '') {
@@ -28,7 +29,7 @@ class CollectionGrid extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: OrientationBuilder(builder: (context, orientation) {
-        int crossAxisCount = orientation == Orientation.portrait ? 2 : 2;
+        int crossAxisCount = orientation == Orientation.portrait ? 1 : 1;
         var axis = orientation == Orientation.portrait
             ? Axis.vertical
             : Axis.horizontal;
@@ -36,12 +37,12 @@ class CollectionGrid extends StatelessWidget {
             itemCount: items.length,
             scrollDirection: axis,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount, // Nombre de colonnes
-              crossAxisSpacing: 4.0, // Espacement horizontal entre les cellules
-              mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
-              childAspectRatio:
-                    orientation == Orientation.portrait ? 16 / 11 : 11 / 16
-            ),
+                crossAxisCount: crossAxisCount, // Nombre de colonnes
+                crossAxisSpacing:
+                    4.0, // Espacement horizontal entre les cellules
+                mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
+                childAspectRatio:
+                    orientation == Orientation.portrait ? 16 / 11 : 11 / 16),
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
@@ -64,10 +65,10 @@ class CollectionGrid extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
+                        child: AutoSizeText(
                           items[index].name,
-                          style: const TextStyle(
-                              fontSize: 25.0, fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontSize: 25),
+                          maxLines: 2,
                         ),
                       ),
                     ],

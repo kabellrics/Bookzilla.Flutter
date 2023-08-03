@@ -27,16 +27,16 @@ class _RowExplorerState extends State<RowExplorer> {
   String currentId = "0";
   bool isCollec = true;
 
-  Future<List<LocalCollection>> getSubCollection() async {
+  Future<List<LocalCollection>?> getSubCollection() async {
     if (isCollec) {
       var collecs = await collectionRepo.getAllCollections();
       return collecs.where((element) => element.parentid == currentId).toList();
     } else {
-      return List.empty();
+      return null;
     }
   }
 
-  Future<List<LocalPublication>> getSubPublication() async {
+  Future<List<LocalPublication>?> getSubPublication() async {
     if (isCollec) {
       var publis = await publiRepo.getAllPublications();
       return publis
@@ -47,7 +47,7 @@ class _RowExplorerState extends State<RowExplorer> {
     }
   }
 
-  Future<List<LocalTome>> getSubTome() async {
+  Future<List<LocalTome>?> getSubTome() async {
     if (!isCollec) {
       var tomes = await tomeRepo.getAllTomes();
       return tomes
@@ -115,8 +115,8 @@ class _RowExplorerState extends State<RowExplorer> {
     );
   }
 
-  FutureBuilder<List<LocalCollection>> FutureCollectionBuilder() {
-    return FutureBuilder<List<LocalCollection>>(
+  FutureBuilder<List<LocalCollection>?> FutureCollectionBuilder() {
+    return FutureBuilder<List<LocalCollection>?>(
         future: getSubCollection(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -128,7 +128,7 @@ class _RowExplorerState extends State<RowExplorer> {
             return const Center(
               child: Text('Erreur lors du chargement des données.'),
             );
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalCollection> items = snapshot.data!;
             return CollectionGridBuilder(items);
           } else {
@@ -138,8 +138,8 @@ class _RowExplorerState extends State<RowExplorer> {
         });
   }
 
-  FutureBuilder<List<LocalPublication>> FuturePublicationBuilder() {
-    return FutureBuilder<List<LocalPublication>>(
+  FutureBuilder<List<LocalPublication>?> FuturePublicationBuilder() {
+    return FutureBuilder<List<LocalPublication>?>(
         future: getSubPublication(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -151,7 +151,7 @@ class _RowExplorerState extends State<RowExplorer> {
             return const Center(
               child: Text('Erreur lors du chargement des données.'),
             );
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalPublication> items = snapshot.data!;
             return PublicationGridBuilder(items);
           } else {
@@ -161,8 +161,8 @@ class _RowExplorerState extends State<RowExplorer> {
         });
   }
 
-  FutureBuilder<List<LocalTome>> FutureTomeBuilder() {
-    return FutureBuilder<List<LocalTome>>(
+  FutureBuilder<List<LocalTome>?> FutureTomeBuilder() {
+    return FutureBuilder<List<LocalTome>?>(
         future: getSubTome(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -174,7 +174,7 @@ class _RowExplorerState extends State<RowExplorer> {
             return const Center(
               child: Text('Erreur lors du chargement des données.'),
             );
-          } else if (snapshot.hasData) {
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalTome> items = snapshot.data!;
             return TomeGridBuilder(items);
           } else {

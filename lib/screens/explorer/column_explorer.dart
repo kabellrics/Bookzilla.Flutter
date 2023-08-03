@@ -30,7 +30,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
 
   bool isCollec = true;
 
-  Future<List<LocalCollection>> getSubCollection() async {
+  Future<List<LocalCollection>?> getSubCollection() async {
     if (isCollec) {
       var collecs = await collectionRepo.getAllCollections();
       return collecs.where((element) => element.parentid == currentId).toList();
@@ -39,7 +39,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
     }
   }
 
-  Future<List<LocalPublication>> getSubPublication() async {
+  Future<List<LocalPublication>?> getSubPublication() async {
     if (isCollec) {
       var publis = await publiRepo.getAllPublications();
       return publis
@@ -50,7 +50,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
     }
   }
 
-  Future<List<LocalTome>> getSubTome() async {
+  Future<List<LocalTome>?> getSubTome() async {
     if (!isCollec) {
       var tomes = await tomeRepo.getAllTomes();
       return tomes
@@ -108,226 +108,256 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
 
   @override
   Widget build(BuildContext context) {
+    // return ListView(
+    //   padding: const EdgeInsets.all(8),
+    //   scrollDirection: Axis.vertical,
+    //   children: [
+    //     futureCollectionBuilder(),
+    //     futurePublicationBuilder(),
+    //     futureTomeBuilder(),
+    //   ],
+    // );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        FutureBuilder<List<LocalCollection>>(
-            future: getSubCollection(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child:
-                      CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
-                );
-              } else if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Erreur lors du chargement des données.'),
-                );
-              } else if (snapshot.hasData) {
-                List<LocalCollection> items = snapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: OrientationBuilder(builder: (context, orientation) {
-                    int crossAxisCount =
-                        orientation == Orientation.portrait ? 1 : 1;
-                    var axis = orientation == Orientation.portrait
-                        ? Axis.vertical
-                        : Axis.horizontal;
-                    return GridView.builder(
-                        itemCount: items.length,
-                        scrollDirection: axis,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                crossAxisCount, // Nombre de colonnes
-                            crossAxisSpacing:
-                                4.0, // Espacement horizontal entre les cellules
-                            mainAxisSpacing:
-                                4.0, // Espacement vertical entre les cellules
-                            childAspectRatio:
-                                orientation == Orientation.portrait
-                                    ? 16 / 11
-                                    : 11 / 16),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              currentId = items[index].id;
-                              isCollec = true;
-                              setState(() {});
-                            },
-                            child: Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  AspectRatio(
-                                    aspectRatio: 16 / 9,
-                                    child: getCollectionImage(items[index]),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: AutoSizeText(
-                                      items[index].name,
-                                      style: const TextStyle(fontSize: 25),
-                                      maxLines: 2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        });
-                  }),
-                );
-              } else {
-                // Cas où le Future est null
-                return const Center();
-              }
-            }),
-        FutureBuilder<List<LocalPublication>>(
-            future: getSubPublication(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child:
-                      CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
-                );
-              } else if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Erreur lors du chargement des données.'),
-                );
-              } else if (snapshot.hasData) {
-                List<LocalPublication> items = snapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: OrientationBuilder(builder: ((context, orientation) {
-                    int crossAxisCount =
-                        orientation == Orientation.portrait ? 2 : 1;
-                    var axis = orientation == Orientation.portrait
-                        ? Axis.vertical
-                        : Axis.horizontal;
-                    return GridView.builder(
-                        itemCount: items.length,
-                        scrollDirection: axis,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                crossAxisCount, // Nombre de colonnes
-                            crossAxisSpacing:
-                                4.0, // Espacement horizontal entre les cellules
-                            mainAxisSpacing:
-                                4.0, // Espacement vertical entre les cellules
-                            childAspectRatio:
-                                orientation == Orientation.portrait
-                                    ? 2 / 3.25
-                                    : 5 / 3.1),
-                        itemBuilder: ((context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              currentId = items[index].id;
-                              isCollec = false;
-                              setState(() {});
-                            },
-                            child: Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  AspectRatio(
-                                    aspectRatio: 2 / 3,
-                                    child: getPublicationImage(items[index]),
-                                  ),
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: AutoSizeText(
-                                        items[index].name,
-                                        style: const TextStyle(fontSize: 25),
-                                        maxLines: 2,
-                                      )),
-                                ],
-                              ),
-                            ),
-                          );
-                        }));
-                  })),
-                );
-              } else {
-                // Cas où le Future est null
-                return const Center();
-              }
-            }),
-        FutureBuilder<List<LocalTome>>(
-            future: getSubTome(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child:
-                      CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
-                );
-              } else if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Erreur lors du chargement des données.'),
-                );
-              } else if (snapshot.hasData) {
-                List<LocalTome> items = snapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: OrientationBuilder(builder: ((context, orientation) {
-                    int crossAxisCount =
-                        orientation == Orientation.portrait ? 2 : 1;
-                    var axis = orientation == Orientation.portrait
-                        ? Axis.vertical
-                        : Axis.horizontal;
-                    return GridView.builder(
-                        itemCount: items.length,
-                        scrollDirection: axis,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount:
-                                crossAxisCount, // Nombre de colonnes
-                            crossAxisSpacing:
-                                4.0, // Espacement horizontal entre les cellules
-                            mainAxisSpacing:
-                                4.0, // Espacement vertical entre les cellules
-                            childAspectRatio:
-                                orientation == Orientation.portrait
-                                    ? 2 / 3.25
-                                    : 5 / 3.1),
-                        itemBuilder: ((context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              // Naviguez vers la page de détails de l'Item en passant l'Item en tant qu'argument
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TomeDetailPage(item: items[index]),
-                                ),
-                              );
-                            },
-                            child: Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  AspectRatio(
-                                    aspectRatio: 2 / 3,
-                                    child: getTomeImage(items[index]),
-                                  ),
-                                  Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: AutoSizeText(
-                                        items[index].name,
-                                        style: const TextStyle(fontSize: 25),
-                                        maxLines: 2,
-                                      )),
-                                ],
-                              ),
-                            ),
-                          );
-                        }));
-                  })),
-                );
-              } else {
-                // Cas où le Future est null
-                return const Center();
-              }
-            }),
+        Expanded(child: Container(child: futureCollectionBuilder())),
+        // Expanded(child: Container(child: futurePublicationBuilder())),
+        // Expanded(child: Container(child: futureTomeBuilder())),
       ],
+    );
+  }
+
+  FutureBuilder<List<LocalTome>?> futureTomeBuilder() {
+    return FutureBuilder<List<LocalTome>?>(
+        future: getSubTome(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child:
+                  CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Erreur lors du chargement des données.'),
+            );
+          } else if (snapshot.hasData) {
+            List<LocalTome> items = snapshot.data!;
+            return tomeGridBuilder(items);
+          } else {
+            // Cas où le Future est null
+            return const Center();
+          }
+        });
+  }
+
+  Padding tomeGridBuilder(List<LocalTome> items) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: OrientationBuilder(builder: ((context, orientation) {
+        int crossAxisCount = orientation == Orientation.portrait ? 2 : 1;
+        var axis = orientation == Orientation.portrait
+            ? Axis.vertical
+            : Axis.horizontal;
+        return GridView.builder(
+            itemCount: items.length,
+            scrollDirection: axis,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount, // Nombre de colonnes
+                crossAxisSpacing:
+                    4.0, // Espacement horizontal entre les cellules
+                mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
+                childAspectRatio:
+                    orientation == Orientation.portrait ? 2 / 3.25 : 5 / 3.1),
+            itemBuilder: ((context, index) {
+              return GestureDetector(
+                onTap: () {
+                  // Naviguez vers la page de détails de l'Item en passant l'Item en tant qu'argument
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TomeDetailPage(item: items[index]),
+                    ),
+                  );
+                },
+                child: tomeCardBuilder(items, index),
+              );
+            }));
+      })),
+    );
+  }
+
+  Card tomeCardBuilder(List<LocalTome> items, int index) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AspectRatio(
+            aspectRatio: 2 / 3,
+            child: getTomeImage(items[index]),
+          ),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AutoSizeText(
+                items[index].name,
+                style: const TextStyle(fontSize: 25),
+                maxLines: 2,
+              )),
+        ],
+      ),
+    );
+  }
+
+  FutureBuilder<List<LocalPublication>?> futurePublicationBuilder() {
+    return FutureBuilder<List<LocalPublication>?>(
+        future: getSubPublication(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child:
+                  CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Erreur lors du chargement des données.'),
+            );
+          } else if (snapshot.hasData) {
+            List<LocalPublication> items = snapshot.data!;
+            return PublicationGridBuilder(items);
+          } else {
+            // Cas où le Future est null
+            return const Center();
+          }
+        });
+  }
+
+  Padding PublicationGridBuilder(List<LocalPublication> items) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: OrientationBuilder(builder: ((context, orientation) {
+        int crossAxisCount = orientation == Orientation.portrait ? 2 : 1;
+        var axis = orientation == Orientation.portrait
+            ? Axis.vertical
+            : Axis.horizontal;
+        return GridView.builder(
+            itemCount: items.length,
+            scrollDirection: axis,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount, // Nombre de colonnes
+                crossAxisSpacing:
+                    4.0, // Espacement horizontal entre les cellules
+                mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
+                childAspectRatio:
+                    orientation == Orientation.portrait ? 3 / 6 : 5 / 3.1),
+            //),
+            itemBuilder: ((context, index) {
+              return GestureDetector(
+                onTap: () {
+                  currentId = items[index].id;
+                  isCollec = false;
+                  setState(() {});
+                },
+                child: publicationCardBuilder(items, index),
+              );
+            }));
+      })),
+    );
+  }
+
+  Card publicationCardBuilder(List<LocalPublication> items, int index) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AspectRatio(
+            aspectRatio: 2 / 3,
+            child: getPublicationImage(items[index]),
+          ),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AutoSizeText(
+                items[index].name,
+                style: const TextStyle(fontSize: 25),
+                maxLines: 2,
+              )),
+        ],
+      ),
+    );
+  }
+
+  FutureBuilder<List<LocalCollection>?> futureCollectionBuilder() {
+    return FutureBuilder<List<LocalCollection>?>(
+        future: getSubCollection(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child:
+                  CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
+            );
+          } else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Erreur lors du chargement des données.'),
+            );
+          } else if (snapshot.hasData) {
+            List<LocalCollection> items = snapshot.data!;
+            return collectionGridBuilder(items);
+          } else {
+            // Cas où le Future est null
+            return const Center();
+          }
+        });
+  }
+
+  Padding collectionGridBuilder(List<LocalCollection> items) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: OrientationBuilder(builder: (context, orientation) {
+        int crossAxisCount = orientation == Orientation.portrait ? 1 : 1;
+        var axis = orientation == Orientation.portrait
+            ? Axis.vertical
+            : Axis.horizontal;
+        return GridView.builder(
+            itemCount: items.length,
+            scrollDirection: axis,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount, // Nombre de colonnes
+                crossAxisSpacing:
+                    4.0, // Espacement horizontal entre les cellules
+                mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
+                childAspectRatio:
+                    orientation == Orientation.portrait ? 16 / 11 : 11 / 16),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  currentId = items[index].id;
+                  isCollec = true;
+                  setState(() {});
+                },
+                child: collectionCardBuilder(items, index),
+              );
+            });
+      }),
+    );
+  }
+
+  Card collectionCardBuilder(List<LocalCollection> items, int index) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: getCollectionImage(items[index]),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AutoSizeText(
+              items[index].name,
+              style: const TextStyle(fontSize: 25),
+              maxLines: 2,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

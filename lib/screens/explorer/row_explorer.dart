@@ -105,17 +105,26 @@ class _RowExplorerState extends State<RowExplorer> {
 
   @override
   Widget build(BuildContext context) {
+    // return ListView(
+    //   padding: const EdgeInsets.all(8),
+    //   scrollDirection: Axis.horizontal,
+    //   children: [
+    //     futureCollectionBuilder(),
+    //     futurePublicationBuilder(),
+    //     futureTomeBuilder(),
+    //   ],
+    // );
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        FutureCollectionBuilder(),
-        FuturePublicationBuilder(),
-        FutureTomeBuilder(),
+        Expanded(child: Container(child: futureCollectionBuilder())),
+        // Expanded(child: Container(child: futurePublicationBuilder())),
+        // Expanded(child: Container(child: futureTomeBuilder())),
       ],
     );
   }
 
-  FutureBuilder<List<LocalCollection>?> FutureCollectionBuilder() {
+  FutureBuilder<List<LocalCollection>?> futureCollectionBuilder() {
     return FutureBuilder<List<LocalCollection>?>(
         future: getSubCollection(),
         builder: (context, snapshot) {
@@ -130,7 +139,7 @@ class _RowExplorerState extends State<RowExplorer> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalCollection> items = snapshot.data!;
-            return CollectionGridBuilder(items);
+            return collectionGridBuilder(items);
           } else {
             // Cas où le Future est null
             return const Center();
@@ -138,7 +147,7 @@ class _RowExplorerState extends State<RowExplorer> {
         });
   }
 
-  FutureBuilder<List<LocalPublication>?> FuturePublicationBuilder() {
+  FutureBuilder<List<LocalPublication>?> futurePublicationBuilder() {
     return FutureBuilder<List<LocalPublication>?>(
         future: getSubPublication(),
         builder: (context, snapshot) {
@@ -153,7 +162,7 @@ class _RowExplorerState extends State<RowExplorer> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalPublication> items = snapshot.data!;
-            return PublicationGridBuilder(items);
+            return publicationGridBuilder(items);
           } else {
             // Cas où le Future est null
             return const Center();
@@ -161,7 +170,7 @@ class _RowExplorerState extends State<RowExplorer> {
         });
   }
 
-  FutureBuilder<List<LocalTome>?> FutureTomeBuilder() {
+  FutureBuilder<List<LocalTome>?> futureTomeBuilder() {
     return FutureBuilder<List<LocalTome>?>(
         future: getSubTome(),
         builder: (context, snapshot) {
@@ -176,7 +185,7 @@ class _RowExplorerState extends State<RowExplorer> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalTome> items = snapshot.data!;
-            return TomeGridBuilder(items);
+            return tomeGridBuilder(items);
           } else {
             // Cas où le Future est null
             return const Center();
@@ -184,7 +193,7 @@ class _RowExplorerState extends State<RowExplorer> {
         });
   }
 
-  Padding CollectionGridBuilder(List<LocalCollection> items) {
+  Padding collectionGridBuilder(List<LocalCollection> items) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: OrientationBuilder(builder: (context, orientation) {
@@ -192,13 +201,13 @@ class _RowExplorerState extends State<RowExplorer> {
         var axis = orientation == Orientation.portrait
             ? Axis.vertical
             : Axis.horizontal;
-        return CollectionGridViewBuilder(
+        return collectionGridViewBuilder(
             items, axis, crossAxisCount, orientation);
       }),
     );
   }
 
-  Padding PublicationGridBuilder(List<LocalPublication> items) {
+  Padding publicationGridBuilder(List<LocalPublication> items) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: OrientationBuilder(builder: ((context, orientation) {
@@ -206,13 +215,13 @@ class _RowExplorerState extends State<RowExplorer> {
         var axis = orientation == Orientation.portrait
             ? Axis.vertical
             : Axis.horizontal;
-        return PublicationGridViewBuilder(
+        return publicationGridViewBuilder(
             items, axis, crossAxisCount, orientation);
       })),
     );
   }
 
-  Padding TomeGridBuilder(List<LocalTome> items) {
+  Padding tomeGridBuilder(List<LocalTome> items) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: OrientationBuilder(builder: ((context, orientation) {
@@ -220,12 +229,12 @@ class _RowExplorerState extends State<RowExplorer> {
         var axis = orientation == Orientation.portrait
             ? Axis.vertical
             : Axis.horizontal;
-        return TomeGridViewBuilder(items, axis, crossAxisCount, orientation);
+        return tomeGridViewBuilder(items, axis, crossAxisCount, orientation);
       })),
     );
   }
 
-  GridView TomeGridViewBuilder(List<LocalTome> items, Axis axis,
+  GridView tomeGridViewBuilder(List<LocalTome> items, Axis axis,
       int crossAxisCount, Orientation orientation) {
     return GridView.builder(
         itemCount: items.length,
@@ -247,29 +256,33 @@ class _RowExplorerState extends State<RowExplorer> {
                 ),
               );
             },
-            child: Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AspectRatio(
-                    aspectRatio: 2 / 3,
-                    child: getTomeImage(items[index]),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AutoSizeText(
-                        items[index].name,
-                        style: const TextStyle(fontSize: 25),
-                        maxLines: 2,
-                      )),
-                ],
-              ),
-            ),
+            child: createTomeCard(items, index),
           );
         }));
   }
 
-  GridView PublicationGridViewBuilder(List<LocalPublication> items, Axis axis,
+  Card createTomeCard(List<LocalTome> items, int index) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AspectRatio(
+            aspectRatio: 2 / 3,
+            child: getTomeImage(items[index]),
+          ),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AutoSizeText(
+                items[index].name,
+                style: const TextStyle(fontSize: 25),
+                maxLines: 2,
+              )),
+        ],
+      ),
+    );
+  }
+
+  GridView publicationGridViewBuilder(List<LocalPublication> items, Axis axis,
       int crossAxisCount, Orientation orientation) {
     return GridView.builder(
         itemCount: items.length,
@@ -287,29 +300,33 @@ class _RowExplorerState extends State<RowExplorer> {
               isCollec = false;
               setState(() {});
             },
-            child: Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AspectRatio(
-                    aspectRatio: 2 / 3,
-                    child: getPublicationImage(items[index]),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: AutoSizeText(
-                        items[index].name,
-                        style: const TextStyle(fontSize: 25),
-                        maxLines: 2,
-                      )),
-                ],
-              ),
-            ),
+            child: createPublicationCard(items, index),
           );
         }));
   }
 
-  GridView CollectionGridViewBuilder(List<LocalCollection> items, Axis axis,
+  Card createPublicationCard(List<LocalPublication> items, int index) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AspectRatio(
+            aspectRatio: 2 / 3,
+            child: getPublicationImage(items[index]),
+          ),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AutoSizeText(
+                items[index].name,
+                style: const TextStyle(fontSize: 25),
+                maxLines: 2,
+              )),
+        ],
+      ),
+    );
+  }
+
+  GridView collectionGridViewBuilder(List<LocalCollection> items, Axis axis,
       int crossAxisCount, Orientation orientation) {
     return GridView.builder(
         itemCount: items.length,
@@ -319,7 +336,7 @@ class _RowExplorerState extends State<RowExplorer> {
             crossAxisSpacing: 4.0, // Espacement horizontal entre les cellules
             mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
             childAspectRatio:
-                orientation == Orientation.portrait ? 16 / 11 : 11 / 16),
+                orientation == Orientation.portrait ? 16 / 11 : 10 / 16),
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
@@ -327,26 +344,30 @@ class _RowExplorerState extends State<RowExplorer> {
               isCollec = true;
               setState(() {});
             },
-            child: Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: getCollectionImage(items[index]),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: AutoSizeText(
-                      items[index].name,
-                      style: const TextStyle(fontSize: 25),
-                      maxLines: 2,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: createCollectionCard(items, index),
           );
         });
+  }
+
+  Card createCollectionCard(List<LocalCollection> items, int index) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: getCollectionImage(items[index]),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AutoSizeText(
+              items[index].name,
+              style: const TextStyle(fontSize: 25),
+              maxLines: 2,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

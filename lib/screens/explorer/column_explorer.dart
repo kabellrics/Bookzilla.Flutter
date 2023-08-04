@@ -108,23 +108,23 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
 
   @override
   Widget build(BuildContext context) {
-    // return ListView(
-    //   padding: const EdgeInsets.all(8),
-    //   scrollDirection: Axis.vertical,
-    //   children: [
-    //     futureCollectionBuilder(),
-    //     futurePublicationBuilder(),
-    //     futureTomeBuilder(),
-    //   ],
-    // );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      scrollDirection: Axis.vertical,
       children: [
         futureCollectionBuilder(),
         futurePublicationBuilder(),
         futureTomeBuilder(),
       ],
     );
+    // return Column(
+    //   crossAxisAlignment: CrossAxisAlignment.stretch,
+    //   children: [
+    //     futureCollectionBuilder(),
+    //     futurePublicationBuilder(),
+    //     futureTomeBuilder(),
+    //   ],
+    // );
   }
 
   FutureBuilder<List<LocalTome>?> futureTomeBuilder() {
@@ -182,6 +182,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
   Card tomeCardBuilder(List<LocalTome> items, int index) {
     return Card(
       elevation: 10,
+      margin: const EdgeInsets.all(5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -252,6 +253,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
   Card publicationCardBuilder(List<LocalPublication> items, int index) {
     return Card(
       elevation: 10,
+      margin: const EdgeInsets.all(5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -302,7 +304,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // Nombre de colonnes
+                crossAxisCount: 1, // Nombre de colonnes
                 crossAxisSpacing:
                     4.0, // Espacement horizontal entre les cellules
                 mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
@@ -322,6 +324,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
   Card collectionCardBuilder(List<LocalCollection> items, int index) {
     return Card(
       elevation: 10,
+      margin: const EdgeInsets.all(5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

@@ -193,18 +193,6 @@ class _RowExplorerState extends State<RowExplorer> {
         });
   }
 
-  Flexible collectionGridBuilder(List<LocalCollection> items) {
-    return Flexible(child: collectionGridViewBuilder(items));
-  }
-
-  Flexible publicationGridBuilder(List<LocalPublication> items) {
-    return Flexible(child: publicationGridViewBuilder(items));
-  }
-
-  Flexible tomeGridBuilder(List<LocalTome> items) {
-    return Flexible(child: tomeGridViewBuilder(items));
-  }
-
   GridView tomeGridViewBuilder(List<LocalTome> items) {
     return GridView.builder(
         itemCount: items.length,
@@ -235,6 +223,7 @@ class _RowExplorerState extends State<RowExplorer> {
   Card createTomeCard(List<LocalTome> items, int index) {
     return Card(
       elevation: 10,
+      margin: const EdgeInsets.all(5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -280,6 +269,7 @@ class _RowExplorerState extends State<RowExplorer> {
   Card createPublicationCard(List<LocalPublication> items, int index) {
     return Card(
       elevation: 10,
+      margin: const EdgeInsets.all(5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -325,6 +315,7 @@ class _RowExplorerState extends State<RowExplorer> {
   Card createCollectionCard(List<LocalCollection> items, int index) {
     return Card(
       elevation: 10,
+      margin: const EdgeInsets.all(5.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

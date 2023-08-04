@@ -105,23 +105,23 @@ class _RowExplorerState extends State<RowExplorer> {
 
   @override
   Widget build(BuildContext context) {
-    // return ListView(
-    //   padding: const EdgeInsets.all(8),
-    //   scrollDirection: Axis.horizontal,
+    return ListView(
+      padding: const EdgeInsets.all(8),
+      scrollDirection: Axis.horizontal,
+      children: [
+        futureCollectionBuilder(),
+        futurePublicationBuilder(),
+        futureTomeBuilder(),
+      ],
+    );
+    // return Row(
+    //   crossAxisAlignment: CrossAxisAlignment.stretch,
     //   children: [
     //     futureCollectionBuilder(),
     //     futurePublicationBuilder(),
     //     futureTomeBuilder(),
     //   ],
     // );
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(child: Container(child: futureCollectionBuilder())),
-        // Expanded(child: Container(child: futurePublicationBuilder())),
-        // Expanded(child: Container(child: futureTomeBuilder())),
-      ],
-    );
   }
 
   FutureBuilder<List<LocalCollection>?> futureCollectionBuilder() {
@@ -139,7 +139,7 @@ class _RowExplorerState extends State<RowExplorer> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalCollection> items = snapshot.data!;
-            return collectionGridBuilder(items);
+            return collectionGridViewBuilder(items);
           } else {
             // Cas où le Future est null
             return const Center();
@@ -162,7 +162,7 @@ class _RowExplorerState extends State<RowExplorer> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalPublication> items = snapshot.data!;
-            return publicationGridBuilder(items);
+            return publicationGridViewBuilder(items);
           } else {
             // Cas où le Future est null
             return const Center();
@@ -185,7 +185,7 @@ class _RowExplorerState extends State<RowExplorer> {
             );
           } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<LocalTome> items = snapshot.data!;
-            return tomeGridBuilder(items);
+            return tomeGridViewBuilder(items);
           } else {
             // Cas où le Future est null
             return const Center();
@@ -193,58 +193,29 @@ class _RowExplorerState extends State<RowExplorer> {
         });
   }
 
-  Padding collectionGridBuilder(List<LocalCollection> items) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: OrientationBuilder(builder: (context, orientation) {
-        int crossAxisCount = orientation == Orientation.portrait ? 1 : 1;
-        var axis = orientation == Orientation.portrait
-            ? Axis.vertical
-            : Axis.horizontal;
-        return collectionGridViewBuilder(
-            items, axis, crossAxisCount, orientation);
-      }),
-    );
+  Flexible collectionGridBuilder(List<LocalCollection> items) {
+    return Flexible(child: collectionGridViewBuilder(items));
   }
 
-  Padding publicationGridBuilder(List<LocalPublication> items) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: OrientationBuilder(builder: ((context, orientation) {
-        int crossAxisCount = orientation == Orientation.portrait ? 2 : 1;
-        var axis = orientation == Orientation.portrait
-            ? Axis.vertical
-            : Axis.horizontal;
-        return publicationGridViewBuilder(
-            items, axis, crossAxisCount, orientation);
-      })),
-    );
+  Flexible publicationGridBuilder(List<LocalPublication> items) {
+    return Flexible(child: publicationGridViewBuilder(items));
   }
 
-  Padding tomeGridBuilder(List<LocalTome> items) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: OrientationBuilder(builder: ((context, orientation) {
-        int crossAxisCount = orientation == Orientation.portrait ? 2 : 1;
-        var axis = orientation == Orientation.portrait
-            ? Axis.vertical
-            : Axis.horizontal;
-        return tomeGridViewBuilder(items, axis, crossAxisCount, orientation);
-      })),
-    );
+  Flexible tomeGridBuilder(List<LocalTome> items) {
+    return Flexible(child: tomeGridViewBuilder(items));
   }
 
-  GridView tomeGridViewBuilder(List<LocalTome> items, Axis axis,
-      int crossAxisCount, Orientation orientation) {
+  GridView tomeGridViewBuilder(List<LocalTome> items) {
     return GridView.builder(
         itemCount: items.length,
-        scrollDirection: axis,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount, // Nombre de colonnes
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1, // Nombre de colonnes
             crossAxisSpacing: 4.0, // Espacement horizontal entre les cellules
             mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
-            childAspectRatio:
-                orientation == Orientation.portrait ? 2 / 3.25 : 5 / 3.1),
+            childAspectRatio: 5 / 3.1),
         itemBuilder: ((context, index) {
           return GestureDetector(
             onTap: () {
@@ -263,6 +234,7 @@ class _RowExplorerState extends State<RowExplorer> {
 
   Card createTomeCard(List<LocalTome> items, int index) {
     return Card(
+      elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -282,17 +254,17 @@ class _RowExplorerState extends State<RowExplorer> {
     );
   }
 
-  GridView publicationGridViewBuilder(List<LocalPublication> items, Axis axis,
-      int crossAxisCount, Orientation orientation) {
+  GridView publicationGridViewBuilder(List<LocalPublication> items) {
     return GridView.builder(
         itemCount: items.length,
-        scrollDirection: axis,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount, // Nombre de colonnes
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1, // Nombre de colonnes
             crossAxisSpacing: 4.0, // Espacement horizontal entre les cellules
             mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
-            childAspectRatio:
-                orientation == Orientation.portrait ? 2 / 3.25 : 5 / 3.1),
+            childAspectRatio: 5 / 3.1),
         itemBuilder: ((context, index) {
           return GestureDetector(
             onTap: () {
@@ -307,6 +279,7 @@ class _RowExplorerState extends State<RowExplorer> {
 
   Card createPublicationCard(List<LocalPublication> items, int index) {
     return Card(
+      elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -326,17 +299,17 @@ class _RowExplorerState extends State<RowExplorer> {
     );
   }
 
-  GridView collectionGridViewBuilder(List<LocalCollection> items, Axis axis,
-      int crossAxisCount, Orientation orientation) {
+  GridView collectionGridViewBuilder(List<LocalCollection> items) {
     return GridView.builder(
         itemCount: items.length,
-        scrollDirection: axis,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount, // Nombre de colonnes
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1, // Nombre de colonnes
             crossAxisSpacing: 4.0, // Espacement horizontal entre les cellules
             mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
-            childAspectRatio:
-                orientation == Orientation.portrait ? 16 / 11 : 10 / 16),
+            childAspectRatio: 10 / 16),
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
@@ -351,6 +324,7 @@ class _RowExplorerState extends State<RowExplorer> {
 
   Card createCollectionCard(List<LocalCollection> items, int index) {
     return Card(
+      elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

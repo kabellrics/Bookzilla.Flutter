@@ -120,9 +120,9 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(child: Container(child: futureCollectionBuilder())),
-        // Expanded(child: Container(child: futurePublicationBuilder())),
-        // Expanded(child: Container(child: futureTomeBuilder())),
+        futureCollectionBuilder(),
+        futurePublicationBuilder(),
+        futureTomeBuilder(),
       ],
     );
   }
@@ -150,24 +150,19 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
         });
   }
 
-  Padding tomeGridBuilder(List<LocalTome> items) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: OrientationBuilder(builder: ((context, orientation) {
-        int crossAxisCount = orientation == Orientation.portrait ? 2 : 1;
-        var axis = orientation == Orientation.portrait
-            ? Axis.vertical
-            : Axis.horizontal;
-        return GridView.builder(
+  Flexible tomeGridBuilder(List<LocalTome> items) {
+    return Flexible(
+        child: GridView.builder(
             itemCount: items.length,
-            scrollDirection: axis,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount, // Nombre de colonnes
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Nombre de colonnes
                 crossAxisSpacing:
                     4.0, // Espacement horizontal entre les cellules
                 mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
-                childAspectRatio:
-                    orientation == Orientation.portrait ? 2 / 3.25 : 5 / 3.1),
+                childAspectRatio: 2 / 3.25),
             itemBuilder: ((context, index) {
               return GestureDetector(
                 onTap: () {
@@ -181,13 +176,12 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
                 },
                 child: tomeCardBuilder(items, index),
               );
-            }));
-      })),
-    );
+            })));
   }
 
   Card tomeCardBuilder(List<LocalTome> items, int index) {
     return Card(
+      elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -222,7 +216,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
             );
           } else if (snapshot.hasData) {
             List<LocalPublication> items = snapshot.data!;
-            return PublicationGridBuilder(items);
+            return publicationGridBuilder(items);
           } else {
             // Cas où le Future est null
             return const Center();
@@ -230,25 +224,19 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
         });
   }
 
-  Padding PublicationGridBuilder(List<LocalPublication> items) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: OrientationBuilder(builder: ((context, orientation) {
-        int crossAxisCount = orientation == Orientation.portrait ? 2 : 1;
-        var axis = orientation == Orientation.portrait
-            ? Axis.vertical
-            : Axis.horizontal;
-        return GridView.builder(
+  Flexible publicationGridBuilder(List<LocalPublication> items) {
+    return Flexible(
+        child: GridView.builder(
             itemCount: items.length,
-            scrollDirection: axis,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount, // Nombre de colonnes
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Nombre de colonnes
                 crossAxisSpacing:
                     4.0, // Espacement horizontal entre les cellules
                 mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
-                childAspectRatio:
-                    orientation == Orientation.portrait ? 3 / 6 : 5 / 3.1),
-            //),
+                childAspectRatio: 2 / 3.5),
             itemBuilder: ((context, index) {
               return GestureDetector(
                 onTap: () {
@@ -258,13 +246,12 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
                 },
                 child: publicationCardBuilder(items, index),
               );
-            }));
-      })),
-    );
+            })));
   }
 
   Card publicationCardBuilder(List<LocalPublication> items, int index) {
     return Card(
+      elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -307,24 +294,19 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
         });
   }
 
-  Padding collectionGridBuilder(List<LocalCollection> items) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: OrientationBuilder(builder: (context, orientation) {
-        int crossAxisCount = orientation == Orientation.portrait ? 1 : 1;
-        var axis = orientation == Orientation.portrait
-            ? Axis.vertical
-            : Axis.horizontal;
-        return GridView.builder(
+  Flexible collectionGridBuilder(List<LocalCollection> items) {
+    return Flexible(
+        child: GridView.builder(
             itemCount: items.length,
-            scrollDirection: axis,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount, // Nombre de colonnes
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Nombre de colonnes
                 crossAxisSpacing:
                     4.0, // Espacement horizontal entre les cellules
                 mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
-                childAspectRatio:
-                    orientation == Orientation.portrait ? 16 / 11 : 11 / 16),
+                childAspectRatio: 16 / 11),
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
@@ -334,13 +316,12 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
                 },
                 child: collectionCardBuilder(items, index),
               );
-            });
-      }),
-    );
+            }));
   }
 
   Card collectionCardBuilder(List<LocalCollection> items, int index) {
     return Card(
+      elevation: 10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

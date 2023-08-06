@@ -9,6 +9,7 @@ import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
 import 'package:bookzilla_flutter/screens/explorer/explorer_header.dart';
 import 'package:bookzilla_flutter/screens/tome/tome_detail_screen.dart';
+import 'package:bookzilla_flutter/shared/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -96,51 +97,6 @@ class _RowExplorerState extends State<RowExplorer> {
           .toList();
     } else {
       return List.empty();
-    }
-  }
-
-  Image getPublicationImage(LocalPublication item) {
-    if (item.localcoverpath != '') {
-      var file = File(item.localcoverpath);
-      return Image.file(
-        file,
-        fit: BoxFit.cover,
-      );
-    } else {
-      return Image.network(
-        'http://192.168.1.17:800/${item.coverPath}',
-        fit: BoxFit.cover,
-      );
-    }
-  }
-
-  Image getTomeImage(LocalTome item) {
-    if (item.localcoverpath != '') {
-      var file = File(item.localcoverpath);
-      return Image.file(
-        file,
-        fit: BoxFit.cover,
-      );
-    } else {
-      return Image.network(
-        'http://192.168.1.17:800/${item.coverPath}',
-        fit: BoxFit.cover,
-      );
-    }
-  }
-
-  Widget getCollectionImage(LocalCollection item) {
-    if (item.localfanartpath != '') {
-      var file = File(item.localfanartpath);
-      return Image.file(
-        file,
-        fit: BoxFit.cover,
-      );
-    } else {
-      return Image.network(
-        'http://192.168.1.17:800/${item.fanartpath}',
-        fit: BoxFit.cover,
-      );
     }
   }
 
@@ -279,7 +235,7 @@ class _RowExplorerState extends State<RowExplorer> {
         children: [
           AspectRatio(
             aspectRatio: 2 / 3,
-            child: getTomeImage(items[index]),
+            child: HelperImage.getTomeImage(items[index]),
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -324,7 +280,7 @@ class _RowExplorerState extends State<RowExplorer> {
         children: [
           AspectRatio(
             aspectRatio: 2 / 3,
-            child: getPublicationImage(items[index]),
+            child: HelperImage.getPublicationImage(items[index]),
           ),
           Padding(
               padding: const EdgeInsets.all(8.0),
@@ -369,7 +325,7 @@ class _RowExplorerState extends State<RowExplorer> {
         children: [
           AspectRatio(
             aspectRatio: 16 / 9,
-            child: getCollectionImage(items[index]),
+            child: HelperImage.getCollectionImage(items[index]),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

@@ -7,6 +7,7 @@ import 'package:bookzilla_flutter/data/local/Publication/publication.dart';
 import 'package:bookzilla_flutter/data/local/Publication/publication_repository.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
+import 'package:bookzilla_flutter/screens/explorer/explorer_header.dart';
 import 'package:bookzilla_flutter/screens/tome/tome_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -27,8 +28,47 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
   final TomeRepository tomeRepo = GetIt.I.get<TomeRepository>();
 
   String currentId = "0";
-
   bool isCollec = true;
+  String oldcurrentId = "0";
+  bool oldisCollec = true;
+  String currentName = "Explorer";
+  String oldName = "";
+
+  void navigateDown(String newid, bool newisCollec, String newName) {
+    oldcurrentId = currentId;
+    oldisCollec = isCollec;
+    oldName = currentName;
+    currentId = newid;
+    isCollec = newisCollec;
+    currentName = newName;
+  }
+
+  Future<void> navigateUp() async {
+    String grandfatherid = "";
+    String grandfathername = "";
+    var collecs = await collectionRepo.getAllCollections();
+    if (collecs.any((element) => element.id == oldcurrentId)) {
+      var fathercollec = collecs.firstWhere((x) => x.id == oldcurrentId);
+      if (fathercollec.parentid != "0") {
+        var collec = collecs.firstWhere((x) => x.id == fathercollec.parentid);
+        grandfatherid = collec.id;
+        grandfathername = collec.name;
+        currentId = oldcurrentId;
+        isCollec = oldisCollec;
+        currentName = oldName;
+        oldcurrentId = grandfatherid;
+        oldisCollec = true;
+        oldName = grandfathername;
+        return;
+      }
+    }
+    currentId = oldcurrentId;
+    isCollec = oldisCollec;
+    currentName = oldName;
+    oldcurrentId = "0";
+    oldisCollec = true;
+    oldName = "Explorer";
+  }
 
   Future<List<LocalCollection>?> getSubCollection() async {
     if (isCollec) {
@@ -112,6 +152,12 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
       padding: const EdgeInsets.all(8),
       scrollDirection: Axis.vertical,
       children: [
+        ExplorerHeader(
+            text: currentName,
+            onBackButtonPressed: () async {
+              await navigateUp();
+              setState(() {});
+            }),
         futureCollectionBuilder(),
         futurePublicationBuilder(),
         futureTomeBuilder(),
@@ -241,8 +287,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
             itemBuilder: ((context, index) {
               return GestureDetector(
                 onTap: () {
-                  currentId = items[index].id;
-                  isCollec = false;
+                  navigateDown(items[index].id, false, items[index].name);
                   setState(() {});
                 },
                 child: publicationCardBuilder(items, index),
@@ -312,8 +357,7 @@ class _ColumnExplorerState extends State<ColumnExplorer> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  currentId = items[index].id;
-                  isCollec = true;
+                  navigateDown(items[index].id, true, items[index].name);
                   setState(() {});
                 },
                 child: collectionCardBuilder(items, index),

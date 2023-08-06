@@ -7,6 +7,7 @@ import 'package:bookzilla_flutter/data/local/Publication/publication.dart';
 import 'package:bookzilla_flutter/data/local/Publication/publication_repository.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
+import 'package:bookzilla_flutter/screens/explorer/explorer_header.dart';
 import 'package:bookzilla_flutter/screens/tome/tome_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -26,6 +27,46 @@ class _RowExplorerState extends State<RowExplorer> {
 
   String currentId = "0";
   bool isCollec = true;
+  String oldcurrentId = "0";
+  bool oldisCollec = true;
+  String currentName = "Explorer";
+  String oldName = "";
+
+  void navigateDown(String newid, bool newisCollec, String newName) {
+    oldcurrentId = currentId;
+    oldisCollec = isCollec;
+    oldName = currentName;
+    currentId = newid;
+    isCollec = newisCollec;
+    currentName = newName;
+  }
+
+  Future<void> navigateUp() async {
+    String grandfatherid = "";
+    String grandfathername = "";
+    var collecs = await collectionRepo.getAllCollections();
+    if (collecs.any((element) => element.id == oldcurrentId)) {
+      var fathercollec = collecs.firstWhere((x) => x.id == oldcurrentId);
+      if (fathercollec.parentid != "0") {
+        var collec = collecs.firstWhere((x) => x.id == fathercollec.parentid);
+        grandfatherid = collec.id;
+        grandfathername = collec.name;
+        currentId = oldcurrentId;
+        isCollec = oldisCollec;
+        currentName = oldName;
+        oldcurrentId = grandfatherid;
+        oldisCollec = true;
+        oldName = grandfathername;
+        return;
+      }
+    }
+    currentId = oldcurrentId;
+    isCollec = oldisCollec;
+    currentName = oldName;
+    oldcurrentId = "0";
+    oldisCollec = true;
+    oldName = "Explorer";
+  }
 
   Future<List<LocalCollection>?> getSubCollection() async {
     if (isCollec) {
@@ -105,15 +146,24 @@ class _RowExplorerState extends State<RowExplorer> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(8),
-      scrollDirection: Axis.horizontal,
-      children: [
-        futureCollectionBuilder(),
-        futurePublicationBuilder(),
-        futureTomeBuilder(),
-      ],
-    );
+    return Column(children: [
+      ExplorerHeader(
+          text: currentName,
+          onBackButtonPressed: () async {
+            await navigateUp();
+            setState(() {});
+          }),
+      Expanded(
+        child: ListView(
+            padding: const EdgeInsets.all(8),
+            scrollDirection: Axis.horizontal,
+            children: [
+              futureCollectionBuilder(),
+              futurePublicationBuilder(),
+              futureTomeBuilder(),
+            ]),
+      ),
+    ]);
     // return Row(
     //   crossAxisAlignment: CrossAxisAlignment.stretch,
     //   children: [
@@ -257,8 +307,7 @@ class _RowExplorerState extends State<RowExplorer> {
         itemBuilder: ((context, index) {
           return GestureDetector(
             onTap: () {
-              currentId = items[index].id;
-              isCollec = false;
+              navigateDown(items[index].id, false, items[index].name);
               setState(() {});
             },
             child: createPublicationCard(items, index),
@@ -303,8 +352,7 @@ class _RowExplorerState extends State<RowExplorer> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              currentId = items[index].id;
-              isCollec = true;
+              navigateDown(items[index].id, true, items[index].name);
               setState(() {});
             },
             child: createCollectionCard(items, index),

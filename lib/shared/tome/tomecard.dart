@@ -22,27 +22,51 @@ class TomeCard extends StatelessWidget {
           ),
         );
       },
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 550.0, maxWidth: 300.0),
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AspectRatio(
-                aspectRatio: 2 / 3,
-                child: getImage(),
-              ),
-              Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: AutoSizeText(
-                    item.name,
-                    style: const TextStyle(fontSize: 25),
-                    maxLines: 2,
-                  )),
-            ],
+      child: Card(
+        child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+          AspectRatio(
+            aspectRatio: 2.2 / 3.5,
+            child: getImage(),
           ),
-        ),
+          Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color:
+                    Colors.grey.withOpacity(0.7), // Fond gris semi-transparent
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AutoSizeText(
+                      item.name,
+                      style: const TextStyle(fontSize: 25),
+                      maxLines: 2,
+                    )),
+              ))
+        ]),
       ),
+      // child: ConstrainedBox(
+      //   constraints: const BoxConstraints(maxHeight: 550.0, maxWidth: 300.0),
+      //   child: Card(
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.stretch,
+      //       children: [
+      //         AspectRatio(
+      //           aspectRatio: 2 / 3,
+      //           child: getImage(),
+      //         ),
+      //         Padding(
+      //             padding: const EdgeInsets.all(8.0),
+      //             child: AutoSizeText(
+      //               item.name,
+      //               style: const TextStyle(fontSize: 25),
+      //               maxLines: 2,
+      //             )),
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -51,7 +75,7 @@ class TomeCard extends StatelessWidget {
       var file = File(item.localcoverpath);
       return Image.file(
         file,
-        fit: BoxFit.cover,
+        fit: BoxFit.fitHeight,
       );
     } else {
       return Image.network(

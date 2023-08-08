@@ -18,6 +18,8 @@ class LocalTome extends api.RemoteTome {
       required super.readingStatusId,
       required super.size,
       required super.isFavorite,
+      required super.isEpub,
+      required super.cfi_EPUB,
       this.haschangedSinceLastSynchro = false});
 
   String getStorageID() {
@@ -38,6 +40,8 @@ class LocalTome extends api.RemoteTome {
       readingStatusId: json['readingStatusId'],
       size: json['size'],
       isFavorite: json['isFavorite'],
+      isEpub: json['IsEpub'],
+      cfi_EPUB: json['CFI_EPUB'],
       haschangedSinceLastSynchro: json['haschangedSinceLastSynchro'],
     );
   }
@@ -58,6 +62,8 @@ class LocalTome extends api.RemoteTome {
       'size': size,
       'isFavorite': isFavorite,
       'haschangedSinceLastSynchro': haschangedSinceLastSynchro,
+      'IsEpub': isEpub,
+      'CFI_EPUB': cfi_EPUB,
     };
   }
 }

@@ -42,6 +42,7 @@ dependencies:
   path: ^1.8.3
   get_it: ^7.6.0
   flowder: ^0.2.0
+  flip_card: ^0.7.0
 
 dev_dependencies:
   flutter_test:

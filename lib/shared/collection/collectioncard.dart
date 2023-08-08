@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookzilla_flutter/data/local/Collection/collection.dart';
 import 'package:bookzilla_flutter/screens/collection/collection_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -21,27 +22,29 @@ class CollectionCard extends StatelessWidget {
           ),
         );
       },
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: 350.0, maxWidth: 500.0),
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: getImage(),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  item.name,
-                  style: const TextStyle(
-                      fontSize: 25.0, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
+      child: Card(
+        child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: getImage(),
           ),
-        ),
+          Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color:
+                    Colors.grey.withOpacity(0.7), // Fond gris semi-transparent
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AutoSizeText(
+                      item.name,
+                      style: const TextStyle(fontSize: 25),
+                      maxLines: 2,
+                    )),
+              ))
+        ]),
       ),
     );
   }
@@ -51,7 +54,7 @@ class CollectionCard extends StatelessWidget {
       var file = File(item.localfanartpath);
       return Image.file(
         file,
-        fit: BoxFit.cover,
+        fit: BoxFit.fitHeight,
       );
     } else {
       return Image.network(

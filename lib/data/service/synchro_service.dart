@@ -195,6 +195,8 @@ class SynchroService {
           orderInPublication: remotetome.orderInPublication,
           readingStatusId: remotetome.readingStatusId,
           size: remotetome.size,
+          isEpub: remotetome.isEpub,
+          cfi_EPUB: remotetome.cfi_EPUB,
           isFavorite: remotetome.isFavorite,
           haschangedSinceLastSynchro: false);
       if (isInList) {

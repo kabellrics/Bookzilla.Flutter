@@ -1,36 +1,24 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookzilla_flutter/data/local/Collection/collection.dart';
-import 'package:bookzilla_flutter/data/local/Collection/collection_repository.dart';
+import 'package:bookzilla_flutter/data/local/Collection/sub_collection_items.dart';
 import 'package:bookzilla_flutter/data/local/Publication/publication.dart';
-import 'package:bookzilla_flutter/data/local/Publication/publication_repository.dart';
+import 'package:bookzilla_flutter/screens/collection/collection_detail_screen.dart';
 import 'package:bookzilla_flutter/shared/helper.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 class CollectionDetailVertical extends StatelessWidget {
   final LocalCollection item;
-  const CollectionDetailVertical({required this.item});
+  final CollectionSubItem subItems;
+  const CollectionDetailVertical({required this.item, required this.subItems});
 
-  Future<List<LocalCollection>> getSubCollection() async {
-    CollectionRepository collectionRepo = GetIt.I.get<CollectionRepository>();
-    var collecs = await collectionRepo.getAllCollections();
-    return collecs.where((element) => element.parentid == item.id).toList();
-  }
-
-  Future<List<LocalPublication>> getSubPublication() async {
-    PublicationRepository publiRepo = GetIt.I.get<PublicationRepository>();
-    var publics = await publiRepo.getAllPublications();
-    return publics.where((element) => element.collectionId == item.id).toList();
-  }
-
-  Widget getHeader() {
+  Widget getHeader(String text) {
     return Container(
         width: double.infinity, // Occupe toute la largeur du composant parent
         height: 50.0, // Hauteur du widget (peut être ajustée selon vos besoins)
         color: Colors.blue, // Couleur du fond du widget (peut être modifiée)
         child: Center(
           child: Text(
-            item.name,
+            text,
             style: const TextStyle(
               fontSize:
                   20.0, // Taille du texte (peut être ajustée selon vos besoins)
@@ -39,29 +27,6 @@ class CollectionDetailVertical extends StatelessWidget {
             ),
           ),
         ));
-  }
-
-  FutureBuilder<List<LocalCollection>?> futureCollectionBuilder() {
-    return FutureBuilder<List<LocalCollection>?>(
-        future: getSubCollection(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child:
-                  CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Erreur lors du chargement des données.'),
-            );
-          } else if (snapshot.hasData) {
-            List<LocalCollection> items = snapshot.data!;
-            return collectionGridBuilder(items);
-          } else {
-            // Cas où le Future est null
-            return const Center();
-          }
-        });
   }
 
   Flexible collectionGridBuilder(List<LocalCollection> items) {
@@ -78,7 +43,17 @@ class CollectionDetailVertical extends StatelessWidget {
                 mainAxisSpacing: 4.0, // Espacement vertical entre les cellules
                 childAspectRatio: 16 / 11),
             itemBuilder: (context, index) {
-              return collectionCardBuilder(items, index);
+              return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            CollectionDetailPage(item: items[index]),
+                      ),
+                    );
+                  },
+                  child: collectionCardBuilder(items, index));
             }));
   }
 
@@ -104,29 +79,6 @@ class CollectionDetailVertical extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  FutureBuilder<List<LocalPublication>?> futurePublicationBuilder() {
-    return FutureBuilder<List<LocalPublication>?>(
-        future: getSubPublication(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child:
-                  CircularProgressIndicator(), // Afficher un indicateur de chargement pendant l'attente
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Erreur lors du chargement des données.'),
-            );
-          } else if (snapshot.hasData) {
-            List<LocalPublication> items = snapshot.data!;
-            return publicationGridBuilder(items);
-          } else {
-            // Cas où le Future est null
-            return const Center();
-          }
-        });
   }
 
   Flexible publicationGridBuilder(List<LocalPublication> items) {
@@ -176,13 +128,14 @@ class CollectionDetailVertical extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       scrollDirection: Axis.vertical,
       children: [
-        getHeader(),
+        getHeader(item.name),
         AspectRatio(
           aspectRatio: 16 / 9,
           child: HelperImage.getCollectionImage(item),
         ),
-        futureCollectionBuilder(),
-        futurePublicationBuilder()
+        getHeader("Contient :"),
+        collectionGridBuilder(subItems.subCollections!),
+        publicationGridBuilder(subItems.subpublications!)
       ],
     );
   }

@@ -21,6 +21,21 @@ class HelperImage {
     }
   }
 
+  static Image getPublicationImageDetail(LocalPublication item) {
+    if (item.localcoverpath != '') {
+      var file = File(item.localcoverpath);
+      return Image.file(
+        file,
+        fit: BoxFit.fitHeight,
+      );
+    } else {
+      return Image.network(
+        'http://192.168.1.17:800/${item.coverPath}',
+        fit: BoxFit.fitHeight,
+      );
+    }
+  }
+
   static Image getTomeImage(LocalTome item) {
     if (item.localcoverpath != '') {
       var file = File(item.localcoverpath);

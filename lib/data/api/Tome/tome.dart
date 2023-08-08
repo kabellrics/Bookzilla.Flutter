@@ -27,6 +27,8 @@ class RemoteTome {
   String readingStatusId;
   String size;
   String isFavorite;
+  String isEpub;
+  String cfi_EPUB;
 
   RemoteTome(
       {required this.id,
@@ -38,21 +40,24 @@ class RemoteTome {
       required this.orderInPublication,
       required this.readingStatusId,
       required this.size,
-      required this.isFavorite});
+      required this.isFavorite,
+      required this.isEpub,
+      required this.cfi_EPUB});
 
   factory RemoteTome.fromJson(Map<String, dynamic> json) {
     return RemoteTome(
-      id: json['Id'],
-      name: json['Name'],
-      coverPath: json['CoverPath'],
-      publicationId: json['PublicationId'],
-      currentPage: json['CurrentPage'],
-      filePath: json['FilePath'],
-      orderInPublication: json['OrderInPublication'],
-      readingStatusId: json['ReadingStatusId'],
-      size: json['Size'],
-      isFavorite: json['IsFavorite'],
-    );
+        id: json['Id'],
+        name: json['Name'],
+        coverPath: json['CoverPath'],
+        publicationId: json['PublicationId'],
+        currentPage: json['CurrentPage'],
+        filePath: json['FilePath'],
+        orderInPublication: json['OrderInPublication'],
+        readingStatusId: json['ReadingStatusId'],
+        size: json['Size'],
+        isFavorite: json['IsFavorite'],
+        isEpub: json['IsEpub'],
+        cfi_EPUB: json['CFI_EPUB']);
   }
 
   Map<String, dynamic> toJson() {
@@ -67,6 +72,8 @@ class RemoteTome {
       'ReadingStatusId': readingStatusId,
       'Size': size,
       'IsFavorite': isFavorite,
+      'IsEpub': isEpub,
+      'CFI_EPUB': cfi_EPUB,
     };
   }
 }

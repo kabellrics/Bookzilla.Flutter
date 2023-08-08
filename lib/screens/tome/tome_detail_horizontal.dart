@@ -116,13 +116,13 @@ String formatFileSize(int bytes) {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        isFavorite = !isFavorite; // Inverser l'état des favoris
+                        isFavorite = !isFavorite; 
                       });
                     },
                     child: Icon(
                       isFavorite
-                          ? Icons.star // Étoile remplie si en favori
-                          : Icons.star_border, // Contour d'étoile sinon
+                          ? Icons.star 
+                          : Icons.star_border, 
                       color: Colors.yellow,
                       size: 30.0,
                     ),
@@ -140,20 +140,20 @@ String formatFileSize(int bytes) {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        isDownloaded = !isDownloaded; // Inverser l'état de téléchargement
+                        isDownloaded = !isDownloaded; 
                       });
                     },
                     child: Icon(
                       isDownloaded
-                          ? Icons.cloud_done // Icône de téléchargement réussi
-                          : Icons.cloud_download, // Icône de téléchargement
+                          ? Icons.cloud_done 
+                          : Icons.cloud_download, 
                       color: Colors.blue,
                       size: 30.0,
                     ),
                   ),
                   SizedBox(width: 10.0),
                   Text(
-                    isDownloaded ? 'Téléchargé' : 'Télécharger',
+                    isDownloaded ? 'Tome Synchronisé' : 'Tome Non Synchronisé',
                     style: TextStyle(fontSize: 18.0),
                   ),
                 ],

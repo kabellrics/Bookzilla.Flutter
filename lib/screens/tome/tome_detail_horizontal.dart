@@ -19,6 +19,8 @@ class TomeDetailHorizontal extends StatefulWidget {
 
 class _TomeDetailHorizontalState extends State<TomeDetailHorizontal> {
   late int currentIndex;
+bool isFavorite = false; 
+  bool isDownloaded = false;
 
   void getstartindex() {
     currentIndex = widget.getstartindex();
@@ -36,6 +38,20 @@ class _TomeDetailHorizontalState extends State<TomeDetailHorizontal> {
       ],
     );
   }
+String formatFileSize(int bytes) {
+  if (bytes < 1024) {
+    return '$bytes B';
+  } else if (bytes < 1024 * 1024) {
+    double sizeKB = bytes / 1024;
+    return '${sizeKB.toStringAsFixed(2)} KB';
+  } else if (bytes < 1024 * 1024 * 1024) {
+    double sizeMB = bytes / (1024 * 1024);
+    return '${sizeMB.toStringAsFixed(2)} MB';
+  } else {
+    double sizeGB = bytes / (1024 * 1024 * 1024);
+    return '${sizeGB.toStringAsFixed(2)} GB';
+  }
+}
 
   String ShowNumOrder() {
     return 'Numéro :' + widget.items[currentIndex].orderInPublication;
@@ -67,67 +83,81 @@ class _TomeDetailHorizontalState extends State<TomeDetailHorizontal> {
 
   Widget getRightPart(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
             child: AutoSizeText(
           widget.items[currentIndex].name,
           style: const TextStyle(fontSize: 50),
-          maxLines: 2,
+          maxLines: 2,textAlign: TextAlign.center,
         )),
-        Center(
-            child: AutoSizeText(
+        AutoSizeText(
           ShowNumOrder(),
           style: const TextStyle(fontSize: 25),
           maxLines: 2,
-        )),
-        Center(
-            child: AutoSizeText(
+        ),
+        AutoSizeText(
           ShowReadingStatus(),
           style: const TextStyle(fontSize: 25),
           maxLines: 2,
-        )),
-        Center(
-            child: AutoSizeText(
+        ),
+        AutoSizeText(
           ShowFavorite(),
           style: const TextStyle(fontSize: 25),
           maxLines: 2,
-        )),
-        Center(
-            child: AutoSizeText(
-          widget.items[currentIndex].size,
+        ),
+        AutoSizeText(
+          formatFileSize(int.parse(widget.items[currentIndex].size)),
           style: const TextStyle(fontSize: 25),
           maxLines: 2,
-        )),
-        // Center(
-        //   child: const ElevatedButton(
-        //     onPressed: () {},
-        //     child: AutoSizeText(
-        //       'Lire',
-        //       style: TextStyle(fontSize: 25),
-        //       maxLines: 2,
-        //     ),
-        //   ),
-        // ),
-        // Center(
-        //   child: const ElevatedButton(
-        //     onPressed: () {},
-        //     child: AutoSizeText(
-        //       'Favori',
-        //       style: TextStyle(fontSize: 25),
-        //       maxLines: 2,
-        //     ),
-        //   ),
-        // ),
-        // Center(
-        //   child: const ElevatedButton(
-        //     onPressed: () {},
-        //     child: AutoSizeText(
-        //       'Télécharger',
-        //       style: TextStyle(fontSize: 25),
-        //       maxLines: 2,
-        //     ),
-        //   ),
-        // )
+        ),Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isFavorite = !isFavorite; // Inverser l'état des favoris
+                      });
+                    },
+                    child: Icon(
+                      isFavorite
+                          ? Icons.star // Étoile remplie si en favori
+                          : Icons.star_border, // Contour d'étoile sinon
+                      color: Colors.yellow,
+                      size: 30.0,
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    isFavorite ? 'Favori' : 'Ajouter aux Favoris',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isDownloaded = !isDownloaded; // Inverser l'état de téléchargement
+                      });
+                    },
+                    child: Icon(
+                      isDownloaded
+                          ? Icons.cloud_done // Icône de téléchargement réussi
+                          : Icons.cloud_download, // Icône de téléchargement
+                      color: Colors.blue,
+                      size: 30.0,
+                    ),
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                    isDownloaded ? 'Téléchargé' : 'Télécharger',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                ],
+              ),
       ],
     );
   }

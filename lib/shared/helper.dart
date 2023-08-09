@@ -41,7 +41,7 @@ class HelperImage {
       var file = File(item.localcoverpath);
       return Image.file(
         file,
-        fit: BoxFit.cover,
+        fit: BoxFit.fitWidth,
       );
     } else {
       return Image.network(

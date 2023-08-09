@@ -1,8 +1,6 @@
-import 'package:bookzilla_flutter/data/api/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
-import 'package:bookzilla_flutter/screens/tome/tome_detail_horizontal.dart';
-import 'package:bookzilla_flutter/screens/tome/tome_detail_vertical.dart';
+import 'package:bookzilla_flutter/screens/tome/tome_detail_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -37,13 +35,7 @@ class TomeDetailPage extends StatelessWidget {
               );
             } else if (snapshot.hasData) {
               List<LocalTome> items = snapshot.data!;
-              return OrientationBuilder(builder: (context, orientation) {
-                if (orientation == Orientation.portrait) {
-                  return TomeDetailVertical(item: item, items: items);
-                } else {
-                  return TomeDetailHorizontal(item: item, items: items);
-                }
-              });
+              return TomeDetailSlider(item: item, items: items);
             } else {
               // Cas où le Future est null
               return const Center(

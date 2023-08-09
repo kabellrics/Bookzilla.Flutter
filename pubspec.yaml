@@ -43,6 +43,7 @@ dependencies:
   get_it: ^7.6.0
   flowder: ^0.2.0
   flip_card: ^0.7.0
+  carousel_slider: ^4.2.1
 
 dev_dependencies:
   flutter_test:

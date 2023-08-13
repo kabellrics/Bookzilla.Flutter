@@ -20,6 +20,12 @@ class LocalTome extends api.RemoteTome {
       required super.isFavorite,
       required super.isEpub,
       required super.cfi_EPUB,
+      required super.googleBookId,
+      required super.auteur,
+      required super.description,
+      required super.publicationDate,
+      required super.iSBN_10,
+      required super.iSBN_13,
       this.haschangedSinceLastSynchro = false});
 
   String getStorageID() {
@@ -28,22 +34,27 @@ class LocalTome extends api.RemoteTome {
 
   factory LocalTome.fromJson(Map<String, dynamic> json) {
     return LocalTome(
-      id: json['id'],
-      name: json['name'],
-      coverPath: json['coverPath'],
-      localcoverpath: json['localcoverpath'],
-      publicationId: json['publicationId'],
-      currentPage: json['currentPage'],
-      filePath: json['filePath'],
-      localfilePath: json['localFilePath'],
-      orderInPublication: json['orderInPublication'],
-      readingStatusId: json['readingStatusId'],
-      size: json['size'],
-      isFavorite: json['isFavorite'],
-      isEpub: json['IsEpub'],
-      cfi_EPUB: json['CFI_EPUB'],
-      haschangedSinceLastSynchro: json['haschangedSinceLastSynchro'],
-    );
+        id: json['id'],
+        name: json['name'],
+        coverPath: json['coverPath'],
+        localcoverpath: json['localcoverpath'],
+        publicationId: json['publicationId'],
+        currentPage: json['currentPage'],
+        filePath: json['filePath'],
+        localfilePath: json['localFilePath'],
+        orderInPublication: json['orderInPublication'],
+        readingStatusId: json['readingStatusId'],
+        size: json['size'],
+        isFavorite: json['isFavorite'],
+        isEpub: json['IsEpub'],
+        cfi_EPUB: json['CFI_EPUB'],
+        haschangedSinceLastSynchro: json['haschangedSinceLastSynchro'],
+        googleBookId: json['GoogleBookId'],
+        auteur: json['Auteur'],
+        description: json['Description'],
+        publicationDate: json['PublicationDate'],
+        iSBN_10: json['ISBN_10'],
+        iSBN_13: json['ISBN_13']);
   }
 
   @override
@@ -64,6 +75,12 @@ class LocalTome extends api.RemoteTome {
       'haschangedSinceLastSynchro': haschangedSinceLastSynchro,
       'IsEpub': isEpub,
       'CFI_EPUB': cfi_EPUB,
+      'GoogleBookId': googleBookId,
+      'Auteur': auteur,
+      'Description': description,
+      'PublicationDate': publicationDate,
+      'ISBN_10': iSBN_10,
+      'ISBN_13': iSBN_13,
     };
   }
 }

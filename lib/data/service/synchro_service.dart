@@ -198,6 +198,12 @@ class SynchroService {
           isEpub: remotetome.isEpub,
           cfi_EPUB: remotetome.cfi_EPUB,
           isFavorite: remotetome.isFavorite,
+          googleBookId: remotetome.googleBookId,
+          auteur: remotetome.auteur,
+          description: remotetome.description,
+          publicationDate: remotetome.publicationDate,
+          iSBN_10: remotetome.iSBN_10,
+          iSBN_13: remotetome.iSBN_13,
           haschangedSinceLastSynchro: false);
       if (isInList) {
         tomeRepo.updateTome(tome);

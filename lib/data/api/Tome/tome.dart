@@ -29,6 +29,12 @@ class RemoteTome {
   String isFavorite;
   String isEpub;
   String cfi_EPUB;
+  String googleBookId;
+  String auteur;
+  String description;
+  String publicationDate;
+  String iSBN_10;
+  String iSBN_13;
 
   RemoteTome(
       {required this.id,
@@ -42,7 +48,13 @@ class RemoteTome {
       required this.size,
       required this.isFavorite,
       required this.isEpub,
-      required this.cfi_EPUB});
+      required this.cfi_EPUB,
+      required this.googleBookId,
+      required this.auteur,
+      required this.description,
+      required this.publicationDate,
+      required this.iSBN_10,
+      required this.iSBN_13});
 
   factory RemoteTome.fromJson(Map<String, dynamic> json) {
     return RemoteTome(
@@ -57,7 +69,13 @@ class RemoteTome {
         size: json['Size'],
         isFavorite: json['IsFavorite'],
         isEpub: json['IsEpub'],
-        cfi_EPUB: json['CFI_EPUB']);
+        cfi_EPUB: json['CFI_EPUB'],
+        googleBookId: json['GoogleBookId'],
+        auteur: json['Auteur'],
+        description: json['Description'],
+        publicationDate: json['PublicationDate'],
+        iSBN_10: json['ISBN_10'],
+        iSBN_13: json['ISBN_13']);
   }
 
   Map<String, dynamic> toJson() {
@@ -74,6 +92,12 @@ class RemoteTome {
       'IsFavorite': isFavorite,
       'IsEpub': isEpub,
       'CFI_EPUB': cfi_EPUB,
+      'GoogleBookId': googleBookId,
+      'Auteur': auteur,
+      'Description': description,
+      'PublicationDate': publicationDate,
+      'ISBN_10': iSBN_10,
+      'ISBN_13': iSBN_13,
     };
   }
 }

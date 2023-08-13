@@ -36,16 +36,16 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
 
   String formatFileSize(int bytes) {
     if (bytes < 1024) {
-      return 'Taille du fichier : $bytes B';
+      return '$bytes B';
     } else if (bytes < 1024 * 1024) {
       double sizeKB = bytes / 1024;
-      return 'Taille du fichier : ${sizeKB.toStringAsFixed(2)} KB';
+      return ' ${sizeKB.toStringAsFixed(2)} KB';
     } else if (bytes < 1024 * 1024 * 1024) {
       double sizeMB = bytes / (1024 * 1024);
-      return 'Taille du fichier : ${sizeMB.toStringAsFixed(2)} MB';
+      return '${sizeMB.toStringAsFixed(2)} MB';
     } else {
       double sizeGB = bytes / (1024 * 1024 * 1024);
-      return 'Taille du fichier : ${sizeGB.toStringAsFixed(2)} GB';
+      return '${sizeGB.toStringAsFixed(2)} GB';
     }
   }
 
@@ -118,6 +118,35 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
         aspectRatio: 2 / 3, child: HelperImage.getTomeImage(item));
   }
 
+  Widget showTitleAndText(String title, String text) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        textDirection: TextDirection.ltr,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: AutoSizeText(
+              title,
+              style: const TextStyle(fontSize: 30),
+              maxLines: 1,
+              textAlign: TextAlign.left,
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: AutoSizeText(
+              text,
+              style: const TextStyle(fontSize: 20),
+              maxLines: 6,
+              textAlign: TextAlign.left,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   Widget getTomeInfo(BuildContext context, LocalTome item) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -130,21 +159,27 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
           maxLines: 2,
           textAlign: TextAlign.center,
         )),
-        AutoSizeText(
-          showNumOrder(item),
-          style: const TextStyle(fontSize: 25),
-          maxLines: 2,
-        ),
-        AutoSizeText(
-          showReadingStatus(item),
-          style: const TextStyle(fontSize: 25),
-          maxLines: 2,
-        ),
-        AutoSizeText(
-          formatFileSize(int.parse(item.size)),
-          style: const TextStyle(fontSize: 25),
-          maxLines: 2,
-        ),
+        showTitleAndText(
+            'Numéro dans la publication :', item.orderInPublication),
+        showTitleAndText('Auteur(s) :', item.auteur),
+        showTitleAndText('Taille :', formatFileSize(int.parse(item.size))),
+        showTitleAndText('Date de Publication :', item.publicationDate),
+        showTitleAndText('Description :', item.description),
+        // AutoSizeText(
+        //   showNumOrder(item),
+        //   style: const TextStyle(fontSize: 25),
+        //   maxLines: 2,
+        // ),
+        // AutoSizeText(
+        //   showReadingStatus(item),
+        //   style: const TextStyle(fontSize: 25),
+        //   maxLines: 2,
+        // ),
+        // AutoSizeText(
+        //   formatFileSize(int.parse(item.size)),
+        //   style: const TextStyle(fontSize: 25),
+        //   maxLines: 2,
+        // ),
         Row(
           children: [
             GestureDetector(

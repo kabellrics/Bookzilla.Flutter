@@ -62,11 +62,11 @@ class MenuDrawer extends StatelessWidget {
               // Navigator.pushNamed(context, '/Publications');
               screen = const PublicationScreen();
               break;
-            case 'Tomes':
-              // Navigator.pop(context);
-              // Navigator.pushNamed(context, '/Tomes');
-              screen = const TomeScreen();
-              break;
+            // case 'Tomes':
+            //   // Navigator.pop(context);
+            //   // Navigator.pushNamed(context, '/Tomes');
+            //   screen = const TomeScreen();
+            //   break;
             case 'Synchro':
               // Navigator.pop(context);
               // Navigator.pushNamed(context, '/Synchro');

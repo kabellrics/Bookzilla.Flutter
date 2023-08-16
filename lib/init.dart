@@ -4,6 +4,7 @@ import 'package:bookzilla_flutter/data/api/Tome/http_tome_helper.dart';
 import 'package:bookzilla_flutter/data/local/Collection/collection_repository.dart';
 import 'package:bookzilla_flutter/data/local/Publication/publication_repository.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
+import 'package:bookzilla_flutter/data/service/book_downloader_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +16,7 @@ class Init {
     await _initSembast();
     _registerRepositories();
     _registerApiclient();
+    _registerServices();
   }
 
   static Future _initSembast() async {
@@ -23,6 +25,10 @@ class Init {
     final databasePath = join(appDir.path, 'bookzilla.db');
     final database = await databaseFactoryIo.openDatabase(databasePath);
     GetIt.I.registerSingleton<Database>(database);
+  }
+
+  static _registerServices() {
+    GetIt.I.registerLazySingleton<BookDownloader>(() => BookDownloader());
   }
 
   static _registerApiclient() {

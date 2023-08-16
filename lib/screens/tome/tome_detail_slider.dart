@@ -1,10 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
+import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
+import 'package:bookzilla_flutter/data/service/book_downloader_service.dart';
 import 'package:bookzilla_flutter/shared/helper.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 
 class TomeDetailSlider extends StatefulWidget {
@@ -23,6 +26,8 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
   late int currentIndex;
   bool isDownloaded = false;
   late FlipCardController _controller;
+  final TomeRepository tomeRepo = GetIt.I.get<TomeRepository>();
+  final BookDownloader bookDownloader = GetIt.I.get<BookDownloader>();
 
   @override
   void initState() {
@@ -186,6 +191,7 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
               onTap: () {
                 setState(() {
                   item.isFavorite = item.isFavorite == "1" ? "0" : "1";
+                  tomeRepo.updateTome(item);
                 });
               },
               child: Icon(
@@ -207,11 +213,13 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  isDownloaded = !isDownloaded;
+                  bookDownloader.downloadInLocal(item);
+                  tomeRepo.updateTome(item);
                 });
               },
               child: Icon(
-                !item.localfilePath.contains('tmp') && item.localfilePath != ''
+                !item.localfilePath.contains('temporary') &&
+                        item.localfilePath != ''
                     ? Icons.cloud_done
                     : Icons.cloud_download,
                 color: Colors.blue,
@@ -220,7 +228,8 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
             ),
             const SizedBox(width: 10.0),
             Text(
-              !item.localfilePath.contains('tmp') && item.localfilePath != ''
+              !item.localfilePath.contains('temporary') &&
+                      item.localfilePath != ''
                   ? 'Tome Synchronisé'
                   : 'Tome Non Synchronisé',
               style: const TextStyle(fontSize: 18.0),

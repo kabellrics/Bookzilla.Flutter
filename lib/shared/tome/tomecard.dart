@@ -35,7 +35,7 @@ class TomeCard extends StatelessWidget {
               child: Container(
                 color:
                     Colors.grey.withOpacity(0.7), // Fond gris semi-transparent
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 2.0),
                 child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: AutoSizeText(

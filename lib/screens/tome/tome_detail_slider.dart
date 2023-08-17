@@ -111,9 +111,12 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
 
   Widget buildHorizontalItem(BuildContext context, LocalTome item) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(1.0),
       child: Row(
-        children: [getCoverImage(item), getTomeInfo(context, item)],
+        children: [
+          Expanded(flex: 1, child: getCoverImage(item)),
+          Expanded(flex: 2, child: getTomeInfo(context, item))
+        ],
       ),
     );
   }
@@ -124,134 +127,133 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
   }
 
   Widget showTitleAndText(String title, String text) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      child: Column(
-        textDirection: TextDirection.ltr,
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: AutoSizeText(
-              title,
-              style: const TextStyle(fontSize: 30),
-              maxLines: 1,
-              textAlign: TextAlign.left,
-            ),
-          ),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: AutoSizeText(
-              text,
-              style: const TextStyle(fontSize: 20),
-              maxLines: 6,
-              textAlign: TextAlign.left,
-            ),
-          )
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AutoSizeText(
+          title.trim(),
+          style: const TextStyle(fontSize: 30),
+          maxLines: 1,
+          textAlign: TextAlign.left,
+        ),
+        // Text(
+        //   text.trim(),
+        //   maxLines: 6,
+        //   softWrap: true,
+        //   textAlign: TextAlign.justify,
+        //   style: const TextStyle(fontSize: 20),
+        // )
+        AutoSizeText(
+          text.trim(),
+          style: const TextStyle(fontSize: 20),
+          maxLines: 6,
+          textAlign: TextAlign.left,
+        )
+      ],
     );
   }
 
   Widget getTomeInfo(BuildContext context, LocalTome item) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Center(
-            child: AutoSizeText(
-          item.name,
-          style: const TextStyle(fontSize: 50),
-          maxLines: 2,
-          textAlign: TextAlign.center,
-        )),
-        showTitleAndText(
-            'Numéro dans la publication :', item.orderInPublication),
-        showTitleAndText('Auteur(s) :', item.auteur),
-        showTitleAndText('Taille :', formatFileSize(int.parse(item.size))),
-        showTitleAndText('Date de Publication :', item.publicationDate),
-        showTitleAndText('Description :', item.description),
-        // AutoSizeText(
-        //   showNumOrder(item),
-        //   style: const TextStyle(fontSize: 25),
-        //   maxLines: 2,
-        // ),
-        // AutoSizeText(
-        //   showReadingStatus(item),
-        //   style: const TextStyle(fontSize: 25),
-        //   maxLines: 2,
-        // ),
-        // AutoSizeText(
-        //   formatFileSize(int.parse(item.size)),
-        //   style: const TextStyle(fontSize: 25),
-        //   maxLines: 2,
-        // ),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  item.isFavorite = item.isFavorite == "1" ? "0" : "1";
-                  tomeRepo.updateTome(item);
-                });
-              },
-              child: Icon(
-                item.isFavorite == "1" ? Icons.star : Icons.star_border,
-                color: Colors.yellow,
-                size: 30.0,
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+              child: AutoSizeText(
+            item.name,
+            style: const TextStyle(fontSize: 45),
+            maxLines: 2,
+            textAlign: TextAlign.center,
+          )),
+          showTitleAndText(
+              'Numéro dans la publication :', item.orderInPublication),
+          showTitleAndText('Auteur(s) :', item.auteur),
+          showTitleAndText('Taille :', formatFileSize(int.parse(item.size))),
+          showTitleAndText('Date de Publication :', item.publicationDate),
+          showTitleAndText('Description :', item.description),
+          // AutoSizeText(
+          //   showNumOrder(item),
+          //   style: const TextStyle(fontSize: 25),
+          //   maxLines: 2,
+          // ),
+          // AutoSizeText(
+          //   showReadingStatus(item),
+          //   style: const TextStyle(fontSize: 25),
+          //   maxLines: 2,
+          // ),
+          // AutoSizeText(
+          //   formatFileSize(int.parse(item.size)),
+          //   style: const TextStyle(fontSize: 25),
+          //   maxLines: 2,
+          // ),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    item.isFavorite = item.isFavorite == "1" ? "0" : "1";
+                    tomeRepo.updateTome(item);
+                  });
+                },
+                child: Icon(
+                  item.isFavorite == "1" ? Icons.star : Icons.star_border,
+                  color: Colors.yellow,
+                  size: 30.0,
+                ),
               ),
-            ),
-            const SizedBox(width: 10.0),
-            Text(
-              item.isFavorite == "1" ? 'Favori' : 'Ajouter aux Favoris',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20.0),
-        Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  bookDownloader.downloadInLocal(item);
-                  tomeRepo.updateTome(item);
-                });
-              },
-              child: Icon(
+              const SizedBox(width: 10.0),
+              Text(
+                item.isFavorite == "1" ? 'Favori' : 'Ajouter aux Favoris',
+                style: const TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20.0),
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    bookDownloader.downloadInLocal(item);
+                  });
+                },
+                child: Icon(
+                  !item.localfilePath.contains('temporary') &&
+                          item.localfilePath != ''
+                      ? Icons.cloud_done
+                      : Icons.cloud_download,
+                  color: Colors.blue,
+                  size: 30.0,
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              Text(
                 !item.localfilePath.contains('temporary') &&
                         item.localfilePath != ''
-                    ? Icons.cloud_done
-                    : Icons.cloud_download,
-                color: Colors.blue,
+                    ? 'Tome Synchronisé'
+                    : 'Tome Non Synchronisé',
+                style: const TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20.0),
+          Row(
+            children: [
+              Icon(
+                item.isEpub == "1" ? Icons.book : Icons.book_online,
+                color: Colors.green,
                 size: 30.0,
               ),
-            ),
-            const SizedBox(width: 10.0),
-            Text(
-              !item.localfilePath.contains('temporary') &&
-                      item.localfilePath != ''
-                  ? 'Tome Synchronisé'
-                  : 'Tome Non Synchronisé',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20.0),
-        Row(
-          children: [
-            Icon(
-              item.isEpub == "1" ? Icons.book : Icons.book_online,
-              color: Colors.green,
-              size: 30.0,
-            ),
-            const SizedBox(width: 10.0),
-            Text(
-              item.isEpub == "1" ? 'Livre' : 'Comics',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-          ],
-        ),
-      ],
+              const SizedBox(width: 10.0),
+              Text(
+                item.isEpub == "1" ? 'Livre' : 'Comics',
+                style: const TextStyle(fontSize: 18.0),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

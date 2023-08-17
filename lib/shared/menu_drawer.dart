@@ -25,7 +25,7 @@ class MenuDrawer extends StatelessWidget {
       'Explorer': const Icon(Icons.explore_rounded),
       'Collections': const Icon(Icons.my_library_books_rounded),
       'Publications': const Icon(Icons.collections_bookmark_rounded),
-      'Tomes': const Icon(Icons.book_rounded),
+      // 'Tomes': const Icon(Icons.book_rounded),
       'Synchro': const Icon(Icons.sync_rounded)
     };
 

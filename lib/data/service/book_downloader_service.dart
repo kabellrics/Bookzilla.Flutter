@@ -26,7 +26,7 @@ class BookDownloader {
 
   Future<String> downloadInTmpAsync(String source, String target) async {
     http.Client client = http.Client();
-    var urlpath = generatelocalpath(apiUrl, target);
+    var urlpath = redefineUrlPath(apiUrl, target);
     var request = await client.get(Uri.parse(urlpath));
     var bytes = request.bodyBytes;
     var tmpfilepath = await generateTmpPath(target);
@@ -37,7 +37,7 @@ class BookDownloader {
 
   Future<String> downloadInLocalAsync(String source, String target) async {
     http.Client client = http.Client();
-    var urlpath = generatelocalpath(apiUrl, target);
+    var urlpath = redefineUrlPath(apiUrl, target);
     var request = await client.get(Uri.parse(urlpath));
     var bytes = request.bodyBytes;
     var tmpfilepath = await generateLocalPath(target);
@@ -47,29 +47,31 @@ class BookDownloader {
   }
 
   void downloadIntmp(LocalTome tome) async {
-    var newlocalpath =
-        await downloadInTmpAsync(tome.filePath, tome.localfilePath);
+    var newlocalpath = await downloadInTmpAsync(tome.filePath, tome.filePath);
     tome.localfilePath = newlocalpath;
     tomeRepo.updateTome(tome);
   }
 
   void downloadInLocal(LocalTome tome) async {
-    var newlocalpath =
-        await downloadInLocalAsync(tome.filePath, tome.localfilePath);
+    var newlocalpath = await downloadInLocalAsync(tome.filePath, tome.filePath);
     tome.localfilePath = newlocalpath;
     tomeRepo.updateTome(tome);
   }
 
-  String generatelocalpath(String targetpath, String itempath) {
+  String redefineUrlPath(String targetpath, String itempath) {
     var pathelements = itempath.split('/');
     return join(targetpath, joinAll(pathelements));
   }
 
   Future<String> generateLocalPath(String localpath) async {
-    return join((await getApplicationSupportDirectory()).path, localpath);
+    var pathelements = localpath.split('/');
+    return join(
+        (await getApplicationSupportDirectory()).path, joinAll(pathelements));
   }
 
   Future<String> generateTmpPath(String localpath) async {
-    return join((await getTemporaryDirectory()).path,'temporary', localpath);
+    var pathelements = localpath.split('/');
+    return join((await getTemporaryDirectory()).path, 'temporary',
+        joinAll(pathelements));
   }
 }

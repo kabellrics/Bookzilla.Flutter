@@ -40,7 +40,6 @@ class PublicationCard extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: AutoSizeText(
                       item.name,
-                      style: const TextStyle(fontSize: 25),
                       maxLines: 2,
                     )),
               ))

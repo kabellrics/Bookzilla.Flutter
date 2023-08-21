@@ -3,6 +3,7 @@ import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
 import 'package:bookzilla_flutter/data/service/book_downloader_service.dart';
 import 'package:bookzilla_flutter/screens/reader/comic_reader.dart';
+import 'package:bookzilla_flutter/screens/reader/epub_reader.dart';
 import 'package:bookzilla_flutter/shared/helper.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
@@ -173,23 +174,37 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-              child: GestureDetector(
-            onDoubleTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ComicReader(item: item, items: widget.items),
-                ),
-              );
-            },
-            child: AutoSizeText(
-              item.name,
-              style: const TextStyle(fontSize: 45),
-              maxLines: 2,
-              textAlign: TextAlign.center,
-            ),
+              child: AutoSizeText(
+            item.name,
+            style: const TextStyle(fontSize: 45),
+            maxLines: 2,
+            textAlign: TextAlign.center,
           )),
+          ElevatedButton(
+              onPressed: () {
+                if (item.isEpub == "0") {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ComicReader(item: item, items: widget.items),
+                    ),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EpubReader(item: item),
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green, // Couleur de fond du bouton
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              ),
+              child: const Text('Lire', style: TextStyle(fontSize: 18))),
           showTitleAndText(
               'Numéro dans la publication :', item.orderInPublication),
           showTitleAndText('Auteur(s) :', item.auteur),

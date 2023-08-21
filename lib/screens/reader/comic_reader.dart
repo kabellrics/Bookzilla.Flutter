@@ -24,6 +24,12 @@ class _ComicReaderState extends State<ComicReader> {
   late List<String> imagePaths;
   late LocalTome currentTome;
 
+  @override
+  void dispose() {
+    currentTome.currentPage = currentIndex.toString();
+    super.dispose();
+  }
+
   Future<List<String>> _extractImages() async {
     final zipBytes = File(widget.item.localfilePath).readAsBytesSync();
     final archive = ZipDecoder().decodeBytes(zipBytes);
@@ -76,6 +82,7 @@ class _ComicReaderState extends State<ComicReader> {
               return PhotoViewGallery.builder(
                 itemCount: items.length,
                 builder: (context, index) {
+                  currentIndex = index;
                   return PhotoViewGalleryPageOptions(
                     imageProvider: FileImage(File(items[index])),
                     minScale: PhotoViewComputedScale.contained,

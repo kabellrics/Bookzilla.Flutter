@@ -12,18 +12,6 @@ class BookDownloader {
   final String apiUrl = 'http://192.168.1.17:800';
   final TomeRepository tomeRepo = GetIt.I.get<TomeRepository>();
 
-  void _showSnackbar(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text,
-            style:
-                const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-        duration: const Duration(
-            seconds: 1), // Durée pendant laquelle le SnackBar est affiché
-      ),
-    );
-  }
-
   Future<String> downloadInTmpAsync(String source, String target) async {
     http.Client client = http.Client();
     var urlpath = redefineUrlPath(apiUrl, target);

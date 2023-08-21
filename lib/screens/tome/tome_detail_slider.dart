@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
 import 'package:bookzilla_flutter/data/service/book_downloader_service.dart';
+import 'package:bookzilla_flutter/screens/reader/comic_reader.dart';
 import 'package:bookzilla_flutter/shared/helper.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,18 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
   void initState() {
     super.initState();
     _controller = FlipCardController();
+  }
+
+  void _showSnackbar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text,
+            style:
+                const TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+        duration: const Duration(
+            seconds: 1), // Durée pendant laquelle le SnackBar est affiché
+      ),
+    );
   }
 
   void getstartindex() {
@@ -160,11 +173,22 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-              child: AutoSizeText(
-            item.name,
-            style: const TextStyle(fontSize: 45),
-            maxLines: 2,
-            textAlign: TextAlign.center,
+              child: GestureDetector(
+            onDoubleTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      ComicReader(item: item, items: widget.items),
+                ),
+              );
+            },
+            child: AutoSizeText(
+              item.name,
+              style: const TextStyle(fontSize: 45),
+              maxLines: 2,
+              textAlign: TextAlign.center,
+            ),
           )),
           showTitleAndText(
               'Numéro dans la publication :', item.orderInPublication),
@@ -216,6 +240,7 @@ class _TomeDetailSliderState extends State<TomeDetailSlider> {
                 onTap: () {
                   setState(() {
                     bookDownloader.downloadInLocal(item);
+                    _showSnackbar(context, "Téléchargement de ${item.name}");
                   });
                 },
                 child: Icon(

@@ -39,7 +39,7 @@ class LocalTome extends api.RemoteTome {
         coverPath: json['coverPath'],
         localcoverpath: json['localcoverpath'],
         publicationId: json['publicationId'],
-        currentPage: json['currentPage'],
+        currentPage: json['currentPage'].toString(),
         filePath: json['filePath'],
         localfilePath: json['localFilePath'],
         orderInPublication: json['orderInPublication'],

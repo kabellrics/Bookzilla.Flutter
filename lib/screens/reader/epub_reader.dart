@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
+import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
 import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class EpubReader extends StatefulWidget {
   final LocalTome item;
@@ -14,6 +16,7 @@ class EpubReader extends StatefulWidget {
 
 class _EpubReaderState extends State<EpubReader> {
   late EpubController _epubController;
+  TomeRepository tomeRepo = GetIt.I.get<TomeRepository>();
 
   @override
   void initState() {
@@ -37,6 +40,7 @@ class _EpubReaderState extends State<EpubReader> {
   void dispose() {
     try {
       widget.item.cfi_EPUB = _epubController.generateEpubCfi()!;
+      tomeRepo.updateTome(widget.item);
     } catch (e) {}
     super.dispose();
   }
@@ -45,13 +49,34 @@ class _EpubReaderState extends State<EpubReader> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // leading: IconButton(
+        //     onPressed: () {
+        //       Navigator.pop(context);
+        //     },
+        //     icon: const Icon(Icons.arrow_back)),
+        // actions: <Widget>[
+        //   IconButton(
+        //       onPressed: () {
+        //         Navigator.pop(context);
+        //       },
+        //       icon: const Icon(Icons.arrow_back))
+        // ],
         // Show actual chapter name
-        title: EpubViewActualChapter(
-            controller: _epubController,
-            builder: (chapterValue) => Text(
-                  'Chapitre: ${chapterValue?.chapter?.Title?.replaceAll('\n', '').trim() ?? ''}',
-                  textAlign: TextAlign.center,
-                )),
+        title: Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.arrow_back)),
+            EpubViewActualChapter(
+                controller: _epubController,
+                builder: (chapterValue) => Text(
+                      'Chapitre: ${chapterValue?.chapter?.Title?.replaceAll('\n', '').trim() ?? ''}',
+                      textAlign: TextAlign.center,
+                    )),
+          ],
+        ),
       ),
       drawer: Drawer(
         child: EpubViewTableOfContents(controller: _epubController),

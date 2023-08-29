@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:archive/archive_io.dart';
 import 'package:bookzilla_flutter/data/local/Tome/tome.dart';
+import 'package:bookzilla_flutter/data/local/Tome/tome_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -23,10 +25,13 @@ class _ComicReaderState extends State<ComicReader> {
   late int currentIndex;
   late List<String> imagePaths;
   late LocalTome currentTome;
+  TomeRepository tomeRepo = GetIt.I.get<TomeRepository>();
+  late PageController _pageController;
 
   @override
   void dispose() {
     currentTome.currentPage = currentIndex.toString();
+    tomeRepo.updateTome(currentTome);
     super.dispose();
   }
 
@@ -62,6 +67,8 @@ class _ComicReaderState extends State<ComicReader> {
   @override
   Widget build(BuildContext context) {
     currentTome = widget.item;
+    _pageController =
+        PageController(initialPage: int.parse(currentTome.currentPage));
     // return const Placeholder();
     return Scaffold(
       appBar: AppBar(title: const Text('Lecteur')),
@@ -81,6 +88,7 @@ class _ComicReaderState extends State<ComicReader> {
               List<String> items = snapshot.data!;
               return PhotoViewGallery.builder(
                 itemCount: items.length,
+                pageController: _pageController,
                 builder: (context, index) {
                   currentIndex = index;
                   return PhotoViewGalleryPageOptions(
